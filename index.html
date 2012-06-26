@@ -1,53 +1,107 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
-	<head>
-		<meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width" />
-		<title>Training App</title>
-		<link rel="stylesheet" href="assets/css/master.css" type="text/css" media="screen" />
-		
-		<script src="phonegap.js" type="text/javascript" charset="utf-8"></script>
-		
-		<script src="assets/js/xui.js" type="text/javascript" charset="utf-8"></script>
-		
-		<script src="assets/js/lawnchair/adaptors/LawnchairAdaptorHelpers.js" type="text/javascript" charset="utf-8"></script>
-		
-		<script src="assets/js/lawnchair/adaptors/DOMStorageAdaptor.js" type="text/javascript" charset="utf-8"></script>
-		
-		<script src="assets/js/lawnchair/adaptors/WebkitSQLiteAdaptor.js" type="text/javascript" charset="utf-8"></script>
-		
-		<script src="assets/js/lawnchair/Lawnchair.js" type="text/javascript" charset="utf-8"></script>
-		
-		<script src="assets/js/dsl.js" type="text/javascript" charset="utf-8"></script>
-		
-		<script src="assets/js/app.js" type="text/javascript" charset="utf-8"></script>
-		
-	</head>
-	<body>
- 		<div id="title_bar">Phone<strong>Gap</strong> Training App</div>
-
-		<div id="welcome" class="view">
-		  <div class="app_button" id="woche_button">Stundenplan für diese Woche</div>
-		  <div class="app_button" id="aenderung_button">Änderungen</div>
-  	      <div class="app_button" id="einstellungen_button">Einstellungen</div>
-		</div>
-
-		<div id="woche" class="view">
-		  <p>Der allgemeine Wochenplan</p>
-		</div>
-		
-		<div id="aenderung" class="view">
-		  <p>Der Vertretungsplan mit Änderungen</p>
-		</div>
-
-		<div id="einstellungen" class="view">
-		  <form id="settings_form">
-			<select name="klasse">
-				<option>5b MS</option>
-				<option>9c Gy</option>			
-			</select>
-		    <button id="save_button">Speichern</button>
-	      </form>
-		</div>
-
-	</body>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>
+        </title>
+        <link rel="stylesheet" href="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.css" />
+        <link rel="stylesheet" href="my.css" />
+        <style>
+            /* App custom styles */
+        </style>
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js">
+        </script>
+        <script src="http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.js">
+        </script>
+		<script src="phonegap.js" type="text/javascript" charset="utf-8">
+		</script>
+        <script src="my.js">
+        </script>
+		<script type="text/javascript">
+		window.addEventListener('load', function () {
+			document.addEventListener('deviceready', function () {
+				//Initialisierung
+			}, false);
+		}, false);
+		</script>
+    </head>
+    <body>
+        <!-- Home -->
+        <div data-role="page" id="page1">
+            <div data-role="content" style="padding: 15px">
+                <a data-role="button" data-transition="fade" href="#page2">
+                    Aktueller Stundenplan
+                </a>
+                <a data-role="button" data-transition="fade" href="#page3">
+                    Vertretungsplan
+                </a>
+                <a data-role="button" data-transition="fade" href="#page5">
+                    Einstellungen
+                </a>
+            </div>
+        </div>
+        <!-- Aktueller Stundenplan -->
+        <div data-role="page" id="page2">
+            <div data-theme="a" data-role="header">
+                <h2>
+                    Stundenplan
+                </h2>
+                <a data-role="button" data-rel="back" data-transition="fade" href="#page2" data-icon="arrow-l" data-iconpos="left">
+                    ZurÃ¼ck
+                </a>
+            </div>
+            <div data-role="content" style="padding: 15px">
+            </div>
+        </div>
+        <!-- Vertretungsplan -->
+        <div data-role="page" id="page3">
+            <div data-theme="a" data-role="header">
+                <a data-role="button" data-rel="back" data-transition="fade" href="#page3" data-icon="arrow-l" data-iconpos="left">
+                    ZurÃ¼ck
+                </a>
+                <h3>
+                    Vertretungsplan
+                </h3>
+            </div>
+            <div data-role="content" style="padding: 15px">
+            </div>
+        </div>
+        <!-- Einstellungen -->
+        <div data-role="page" id="page5">
+            <div data-theme="a" data-role="header">
+                <a data-role="button" data-rel="back" data-transition="fade" href="#page3" data-icon="arrow-l" data-iconpos="left">
+                    ZurÃ¼ck
+                </a>
+                <h3>
+                    Einstellungen
+                </h3>
+            </div>
+            <div data-role="content" style="padding: 15px">
+                <div data-role="fieldcontain">
+                    <label for="selectmenu2">
+                        Klasse:
+                    </label>
+                    <select name="selectmenu2" id="selectmenu2">
+                        <option value="5a MS">
+                            5a MS
+                        </option>
+                        <option value="5b MS">
+                            5b MS
+                        </option>
+                        <option value="5c MS">
+                            5c MS
+                        </option>
+                        <option value="6a MS">
+                            6a MS
+                        </option>
+                    </select>
+                </div>
+                <input value="Speichern" type="submit" />
+            </div>
+        </div>
+        <script>
+            //App custom javascript
+        </script>
+    </body>
 </html>
