@@ -14,6 +14,8 @@
         </script>
         <script src="assets/js/jquery.mobile-1.1.0.min.js">
         </script>
+		<script src="assets/js/jquery.colselect.js">
+        </script>
 		<script src="phonegap.js" type="text/javascript" charset="utf-8">
 		</script>
         <script src="my.js">
@@ -27,6 +29,92 @@
 				});
 			}, false);
 		}, false);
+		
+		function removeCol(col){
+			// Make sure col has value
+			if(!col){ col = 1; }
+			//$('tr > *:not(td)').remove();
+			//$('center > table > tbody > tr > td:nth-col(101)').remove();
+
+			 $('center > table > tbody > tr > td').nthCol(6*col+1).remove();
+			 $('center > table > tbody > tr > td').nthCol(6*col).remove();
+			 $('center > table > tbody > tr > td').nthCol(6*col-1).remove();
+			 $('center > table > tbody > tr > td').nthCol(6*col-2).remove();
+			 $('center > table > tbody > tr > td').nthCol(6*col-3).remove();
+			 $('center > table > tbody > tr > td').nthCol(6*col-4).remove();
+
+			//$('tr td:not(:nth-child('+col+'),:first-child)', this).remove();
+			return this;
+		};
+		function leaveCol(col){
+			for (i=5;i>0;i--)
+			{
+				if (i != col)
+				{
+					removeCol(i);
+				}
+			}
+		};
+		
+		var stundenplanKlasse = "";
+		
+		var aktuellerTag = 1;
+		
+		function stundenplanLaden()
+		{
+			var ajax = new XMLHttpRequest();
+			ajax.open("GET","http://www.hoga-schloss-albrechtsberg.de/fileadmin/stundenplan/mso/26/c/c00006.htm",true);
+			ajax.send();
+
+			ajax.onreadystatechange=function(){
+			if(ajax.readyState==4 && (ajax.status==200)){
+               document.getElementById('contentStundenplan').innerHTML = ajax.responseText;
+			   //for( i=20; i>0; i--)
+			   //{
+				//	if( i != aktuellerTag)
+				//	{
+				//		//$('center > table').removeCol(i);
+				//	}
+			   //}
+			   leaveCol(aktuellerTag);
+			}
+		}
+ 
+			
+		}
+		
+		function montagAnzeigen()
+		{
+			aktuellerTag = 1;
+			stundenplanLaden();
+			/*$('#contentStundenplan').html("Montag");*/
+		}
+		function dienstagAnzeigen()
+		{
+			aktuellerTag = 2;
+			stundenplanLaden();
+			/*$('#contentStundenplan').html("Dienstag");*/
+		}
+		function mittwochAnzeigen()
+		{
+			aktuellerTag = 3;
+			stundenplanLaden();
+			/*$('#contentStundenplan').html("Dienstag");*/
+		}
+		function donnerstagAnzeigen()
+		{
+			aktuellerTag = 4;
+			stundenplanLaden();
+			/*$('#contentStundenplan').html("Dienstag");*/
+		}
+		function freitagAnzeigen()
+		{
+			aktuellerTag = 5;
+			stundenplanLaden();
+			/*$('#contentStundenplan').html("Dienstag");*/
+		}
+		
+		
 		</script>
 		
 		<!-- Swipe beim Stundenplan -->
@@ -95,77 +183,91 @@ $(document).ready(function() {
     <body>
         <!-- Home -->
         <div data-role="page" id="page1">
-            <div data-role="content" style="padding: 15px">
-                <a data-role="button" data-transition="fade" href="#page2">
-                    Aktueller Stundenplan
-                </a>
-                <a data-role="button" data-transition="fade" href="#page3">
-                    Vertretungsplan
-                </a>
-                <a data-role="button" data-transition="fade" href="#page5">
-                    Einstellungen
-                </a>
-            </div>
-        </div>
-        <!-- Aktueller Stundenplan -->
-        <div data-role="page" id="page2">
-            <div data-theme="a" data-role="header">
-                <h2>
-                    Stundenplan
-                </h2>
-                <a data-role="button" data-rel="back" data-transition="fade" href="#page2" data-icon="arrow-l" data-iconpos="left">
-                    Zurück
-                </a>
-            </div>
-            <div data-role="content" style="padding: 15px">
-            </div>
-        </div>
-        <!-- Vertretungsplan -->
-        <div data-role="page" id="page3">
-            <div data-theme="a" data-role="header">
-                <a data-role="button" data-rel="back" data-transition="fade" href="#page3" data-icon="arrow-l" data-iconpos="left">
-                    Zurück
-                </a>
-                <h3>
-                    Vertretungsplan
-                </h3>
-            </div>
-            <div data-role="content" style="padding: 15px">
-            </div>
-        </div>
-        <!-- Einstellungen -->
-        <div data-role="page" id="page5">
-            <div data-theme="a" data-role="header">
-                <a data-role="button" data-rel="back" data-transition="fade" href="#page3" data-icon="arrow-l" data-iconpos="left">
-                    Zurück
-                </a>
-                <h3>
-                    Einstellungen
-                </h3>
-            </div>
-            <div data-role="content" style="padding: 15px">
-                <div data-role="fieldcontain">
-                    <label for="selectmenu2">
-                        Klasse:
-                    </label>
-                    <select name="selectmenu2" id="selectmenu2">
-                        <option value="5a MS">
-                            5a MS
-                        </option>
-                        <option value="5b MS">
-                            5b MS
-                        </option>
-                        <option value="5c MS">
-                            5c MS
-                        </option>
-                        <option value="6a MS">
-                            6a MS
-                        </option>
-                    </select>
-                </div>
-                <input value="Speichern" type="submit" />
-            </div>
-        </div>
+			<div data-role="content" style="padding: 15px">
+				<a data-role="button" data-transition="fade" href="#page2">
+					Aktueller Stundenplan
+				</a>
+				<a data-role="button" data-transition="fade" href="#page3">
+					Vertretungsplan
+				</a>
+				<a data-role="button" data-transition="fade" href="#page5">
+					Einstellungen
+				</a>
+			</div>
+		</div>
+		<!-- Aktueller Stundenplan -->
+		<div data-role="page" id="page2">
+			<div data-theme="a" data-role="header">
+				<h2>
+					Stundenplan
+				</h2>
+				<a data-role="button" data-transition="fade" href="#page1" data-icon="arrow-l"
+				data-iconpos="left">
+					Zurück
+				</a>
+			</div>
+			<div data-role="content" id="contentStundenplan" style="padding: 15px">
+			</div>
+			<div data-role="footer" data-id="footerStundenplan" data-position="fixed">
+				<div data-role="navbar">
+					<ul>
+						<li><a href="#" id ="tabMo" onclick="montagAnzeigen();">Mo</a></li>
+						<li><a href="#" id ="tabDi" onclick="dienstagAnzeigen();">Di</a></li>
+						<li><a href="#" id ="tabMi" onclick="mittwochAnzeigen();">Mi</a></li>
+						<li><a href="#" id ="tabDo" onclick="donnerstagAnzeigen();">Do</a></li>
+						<li><a href="#" id ="tabFr" onclick="freitagAnzeigen();">Fr</a></li>
+					</ul>
+				</div><!-- /navbar -->
+			</div><!-- /footer -->
+		</div>
+		<!-- Vertretungsplan -->
+		<div data-role="page" id="page3">
+			<div data-theme="a" data-role="header">
+				<a data-role="button" data-rel="back" data-transition="fade" href="#page3"
+				data-icon="arrow-l" data-iconpos="left">
+					Zurück
+				</a>
+				<h3>
+					Vertretungsplan
+				</h3>
+			</div>
+			<div data-role="content" style="padding: 15px">
+			</div>
+		</div>
+		<!-- Einstellungen -->
+		<div data-role="page" id="page5">
+			<div data-theme="a" data-role="header">
+				<a data-role="button" data-rel="back" data-transition="fade" href="#page3"
+				data-icon="arrow-l" data-iconpos="left">
+					Zurück
+				</a>
+				<h3>
+					Einstellungen
+				</h3>
+			</div>
+			<div data-role="content" style="padding: 15px">
+				<div data-role="fieldcontain">
+					<label for="selectmenu2">
+						Klasse:
+					</label>
+					<select name="selectmenu2" id="selectmenu2">
+						<option value="5a MS">
+							5a MS
+						</option>
+						<option value="5b MS">
+							5b MS
+						</option>
+						<option value="5c MS">
+							5c MS
+						</option>
+						<option value="6a MS">
+							6a MS
+						</option>
+					</select>
+				</div>
+				<input value="Speichern" type="submit">
+			</div>
+		</div>
         <script>
             //App custom javascript
         </script>
