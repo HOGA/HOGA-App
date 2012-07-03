@@ -60,26 +60,101 @@
 		
 		var aktuellerTag = 1;
 		
+		function kalenderwocheBerechnen()
+		{
+			// Copy date so don't modify original
+			d = new Date(new Date());
+			d.setHours(0,0,0);
+			// Set to nearest Thursday: current date + 4 - current day number
+			// Make Sunday's day number 7
+			d.setDate(d.getDate() + 4 - (d.getDay()||7));
+			// Get first day of year
+			var yearStart = new Date(d.getFullYear(),0,1);
+			// Calculate full weeks to nearest Thursday
+			var weekNo = Math.ceil(( ( (d - yearStart) / 86400000) + 1)/7)
+			// Return array of year and week number
+			return weekNo;
+		}
+		
 		function stundenplanLaden()
 		{
-			var ajax = new XMLHttpRequest();
-			ajax.open("GET","http://www.hoga-schloss-albrechtsberg.de/fileadmin/stundenplan/mso/26/c/c00006.htm",true);
-			ajax.send();
+			if (stundenplanKlasse === "")
+			{
+				var ajax = new XMLHttpRequest();
+				klasse = window.localStorage.getItem("klasse");
+				kw = kalenderwocheBerechnen();
+				if (klasse != null)
+				{
+					ajax.open("GET","http://www.hoga-schloss-albrechtsberg.de/fileadmin/stundenplan/mso/"+kw+"/c/c000"+klasse+".htm",true);
+					ajax.send();
 
-			ajax.onreadystatechange=function(){
-			if(ajax.readyState==4 && (ajax.status==200)){
-               document.getElementById('contentStundenplan').innerHTML = ajax.responseText;
-			   //for( i=20; i>0; i--)
-			   //{
-				//	if( i != aktuellerTag)
-				//	{
-				//		//$('center > table').removeCol(i);
-				//	}
-			   //}
-			   leaveCol(aktuellerTag);
+					ajax.onreadystatechange=function(){
+						if(ajax.readyState==4 && (ajax.status==200)){
+							stundenplanKlasse = ajax.responseText;
+							planAnzeigen();
+						}
+					}
+				}
+				else
+				{
+					document.getElementById('contentStundenplan').innerHTML = "Bitte gib zuerst deine Klasse an";
+				}
 			}
+			else
+			{
+				planAnzeigen();
+			}			
 		}
- 
+		
+		function planAnzeigen()
+		{
+			document.getElementById('contentStundenplan').innerHTML = stundenplanKlasse;
+			$('center > font').remove();
+			leaveCol(aktuellerTag);
+			$('td:first-child td:nth-col(2)').remove();
+			//Durlaufe alle Tabellenspalten ab der 1. Stunde
+			stundenDa = false;
+			for (i = 3; i < 27; i++)
+			{
+				reihe = $('center > table > tbody > tr:eq('+i+')').first();
+				if (reihe.text().trim().length <= 1)
+				{
+					if(stundenDa)
+						reihe.hide();
+					continue;
+				}
+				if (isNaN(Number(reihe.text())))
+				{
+					stundenDa = true;
+					rowSpan = 1;
+					reihe.children('td[rowspan]').each(function(j) {
+						rs = parseInt($(this).attr('rowspan'));
+						if (rs > rowSpan)
+						{
+							rowSpan = rs;
+						}	
+					});
+					i+= rowSpan;
+					i -= 1;
+				}
+				else
+				{
+					if(stundenDa)
+						reihe.hide();
+				}
+				
+			}
+			//Leere Stunden entfernen
+		}
+		
+		function einstellungenSpeichern() 
+		{
+			var k = $('#selectKlasse option:selected').val();
+			if (k != null)
+			{
+				window.localStorage.setItem("klasse",k);
+				$.mobile.changePage("#page", "slide", false, true);
+			}
 			
 		}
 		
@@ -207,6 +282,7 @@ $(document).ready(function() {
 				</a>
 			</div>
 			<div data-role="content" id="contentStundenplan" style="padding: 15px">
+				Stundenplan konnte nicht geladen werden
 			</div>
 			<div data-role="footer" data-id="footerStundenplan" data-position="fixed">
 				<div data-role="navbar">
@@ -247,25 +323,138 @@ $(document).ready(function() {
 			</div>
 			<div data-role="content" style="padding: 15px">
 				<div data-role="fieldcontain">
-					<label for="selectmenu2">
+					<label for="selectKlasse">
 						Klasse:
 					</label>
-					<select name="selectmenu2" id="selectmenu2">
-						<option value="5a MS">
+					<select name="selectKlasse" id="selectKlasse">
+						<option value="01">
 							5a MS
 						</option>
-						<option value="5b MS">
+						<option value="02">
 							5b MS
 						</option>
-						<option value="5c MS">
+						<option value="03">
 							5c MS
 						</option>
-						<option value="6a MS">
+						<option value="04">
+							5a Gy
+						</option>
+						<option value="05">
+							5b Gy
+						</option>
+						<option value="06">
+							5c Gy
+						</option>
+						<option value="07">
 							6a MS
+						</option>
+						<option value="08">
+							6b MS
+						</option>
+						<option value="09">
+							6c MS
+						</option>
+						<option value="10">
+							6a Gy
+						</option>
+						<option value="11">
+							6b Gy
+						</option>
+						<option value="12">
+							6c Gy
+						</option>
+						<option value="13">
+							7a MS
+						</option>
+						<option value="14">
+							7b MS
+						</option>
+						<option value="15">
+							7c MS
+						</option>
+						<option value="16">
+							7a Gy
+						</option>
+						<option value="17">
+							7b Gy
+						</option>
+						<option value="18">
+							7c Gy
+						</option>
+						<option value="19">
+							8a MS
+						</option>
+						<option value="20">
+							8b MS
+						</option>
+						<option value="21">
+							8 HS
+						</option>
+						<option value="22">
+							8c MS
+						</option>
+						<option value="23">
+							8a Gy
+						</option>
+						<option value="24">
+							8b Gy
+						</option>
+						<option value="25">
+							8c Gy
+						</option>
+						<option value="26">
+							9a MS
+						</option>
+						<option value="27">
+							9b MS
+						</option>
+						<option value="28">
+							9c MS
+						</option>
+						<option value="29">
+							9a Gy
+						</option>
+						<option value="30">
+							9b Gy
+						</option>
+						<option value="31">
+							9c Gy
+						</option>
+						<option value="32">
+							10a MS
+						</option>
+						<option value="33">
+							10b MS
+						</option>
+						<option value="34">
+							10c MS
+						</option>
+						<option value="35">
+							10a Gy
+						</option>
+						<option value="36">
+							10b Gy
+						</option>
+						<option value="37">
+							10c Gy
+						</option>
+						<option value="38">
+							11/1 Gy
+						</option>
+						<option value="39">
+							11/2 Gy
+						</option>
+						<option value="40">
+							12/1 Gy
+						</option>
+						<option value="41">
+							12/2 Gy
 						</option>
 					</select>
 				</div>
-				<input value="Speichern" type="submit">
+				<a data-role="button" data-transition="fade" href="#" onclick="einstellungenSpeichern();">
+					Speichern
+				</a>
 			</div>
 		</div>
         <script>
